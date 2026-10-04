@@ -14,7 +14,7 @@ mutex mLock;
 bool countUpComplete = false;
 condition_variable cv;
 
-//method for counting up or down
+//method for counting down
 void countDown(int& currCount) {
 	unique_lock lk(mLock);
 	while (countUpComplete == false) {
@@ -25,19 +25,21 @@ void countDown(int& currCount) {
 		cout << "Count down " << currCount << endl;
 		currCount--;
 	}
+	cout << "Count down " << currCount << endl;
 	//lock automatically releases here as it leaves the scope
 }
 
-//method for counting up or down
+//method for counting up
 void countUp(int& currCount) {
 	{
 		//added a second set of braces to put our lock into
 		//a smaller scope.  This way it can be destroyed prior
 		//to us notifying the waiting threads
 		scoped_lock lock(mLock);
+		cout << "Count up " << currCount << endl;
 		for (int i=0; i<=19; i++) {
 			currCount++;
-			cout << "count up " << currCount << endl;
+			cout << "Count up " << currCount << endl;
 		}
 		//lock automatically releases here as it leaves the scope
 		countUpComplete = true;
